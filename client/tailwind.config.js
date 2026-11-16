@@ -1,0 +1,1 @@
+export default { content: ['./index.html', './src/**/*.{js,jsx}'], theme: { extend: { colors: { emerald: { DEFAULT: '#0F5132', dark: '#0A3B24' }, gold: '#C9A961', ivory: '#FAF7F0', sage: '#A8BFA4', ink: '#2B2B2B' }, fontFamily: { serif: ['"Playfair Display"', 'serif'] } } }, plugins: [] };

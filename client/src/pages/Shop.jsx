@@ -1,0 +1,13 @@
+import { useEffect, useState } from 'react'; import { useSearchParams } from 'react-router-dom'; import { api, useStore } from '../store.jsx'; import Card from './Card.jsx';
+export default function Shop() { const [sp, setSp] = useSearchParams(); const { wish } = useStore(); const [d, setD] = useState(null);
+  const set = (k, v) => { const n = new URLSearchParams(sp); v ? n.set(k, v) : n.delete(k); n.delete('page'); setSp(n); };
+  useEffect(() => { setD(null); if (sp.get('wishlist')) api.get('/wishlist').then(r => setD({ products: r.data, pages: 1 })).catch(() => setD({ products: [], pages: 1 })); else api.get('/products?' + sp.toString()).then(r => setD(r.data)); }, [sp, wish.length]);
+  const page = +(sp.get('page') || 1);
+  return <div className="px-4 md:px-10 py-8"><h1 className="font-serif text-3xl mb-6">{sp.get('wishlist') ? 'My Wishlist' : sp.get('category') || (sp.get('search') ? `Results for "${sp.get('search')}"` : 'All Products')}</h1>
+    <div className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-8">
+      <select className="inp" value={sp.get('size') || ''} onChange={e => set('size', e.target.value)}><option value="">Size</option>{['S', 'M', 'L', 'XL'].map(s => <option key={s}>{s}</option>)}</select>
+      <select className="inp" value={sp.get('color') || ''} onChange={e => set('color', e.target.value)}><option value="">Colour</option>{['Emerald', 'Ivory', 'Sage'].map(s => <option key={s}>{s}</option>)}</select>
+      <input className="inp" type="number" placeholder="Min PKR" value={sp.get('min') || ''} onChange={e => set('min', e.target.value)} /><input className="inp" type="number" placeholder="Max PKR" value={sp.get('max') || ''} onChange={e => set('max', e.target.value)} />
+      <select className="inp col-span-2" value={sp.get('sort') || ''} onChange={e => set('sort', e.target.value)}><option value="">Newest</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option></select></div>
+    {!d ? <div className="grid grid-cols-2 md:grid-cols-4 gap-5">{Array.from({ length: 8 }, (_, i) => <div key={i} className="skel aspect-[3/4]" />)}</div> : !d.products.length ? <p>No products found.</p> : <div className="grid grid-cols-2 md:grid-cols-4 gap-5">{d.products.map(p => <Card key={p._id} p={p} />)}</div>}
+    {d?.pages > 1 && <div className="flex gap-2 justify-center mt-10">{Array.from({ length: d.pages }, (_, i) => <button key={i} onClick={() => { const n = new URLSearchParams(sp); n.set('page', i + 1); setSp(n); }} className={`w-9 h-9 border ${page === i + 1 ? 'bg-emerald text-ivory' : 'border-sage'}`}>{i + 1}</button>)}</div>}</div>; }

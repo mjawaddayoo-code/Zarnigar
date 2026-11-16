@@ -1,0 +1,6 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+html{scroll-behavior:smooth}body{@apply bg-ivory text-ink;font-family:Inter,sans-serif}
+.btn{@apply bg-emerald text-ivory px-6 py-3 text-sm tracking-widest uppercase hover:bg-emerald-dark transition}
+.btn-gold{@apply bg-gold text-ink px-6 py-3 text-sm tracking-widest uppercase hover:opacity-90 transition}
+.inp{@apply border border-sage bg-white px-3 py-2 w-full outline-none focus:border-emerald}
+.skel{@apply animate-pulse bg-sage/30}
